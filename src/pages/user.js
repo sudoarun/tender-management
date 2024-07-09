@@ -7,8 +7,8 @@ const User = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tenderData, setTenderData] = useState({});
   return (
-    <div>
-      <div className="bg-black text-center">
+    <div className="mb-5">
+      <div className="bg-black text-center py-2">
         <span className="text-white">User Page</span>
       </div>
       <h4 className="mt-4 text-center">Available Tenders</h4>
