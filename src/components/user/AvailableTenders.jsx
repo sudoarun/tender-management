@@ -17,8 +17,8 @@ const AvailableTenders = ({ tableData, setBuyModal, setTenderData }) => {
           <tr key={index}>
             <th scope="row">{el.tenderName}</th>
             <td>{el.tenderDesc}</td>
-            <td>{el.tenderStart}</td>
-            <td>{el.tenderEnd}</td>
+            <td>{el?.tenderStart}</td>
+            <td>{el?.tenderEnd}</td>
             <td>
               <button
                 className="btn btn-danger"

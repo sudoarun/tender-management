@@ -24,11 +24,11 @@ const CreateTender = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const startDate = new Date(state.tenderStart);
-    const endDate = new Date(state.tenderEnd);
+    // const startDate = new Date(state.tenderStart);
+    // const endDate = new Date(state.tenderEnd);
     const id = state.tenderName.replace(/[\s,]+/g, "-");
-    state.tenderStart = startDate;
-    state.tenderEnd = endDate;
+    // state.tenderStart = startDate;
+    // state.tenderEnd = endDate;
     try {
       await setDoc(doc(db, "admin", `${id}`), state).then(() => {
         let notice = {

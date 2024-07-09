@@ -15,11 +15,11 @@ const PreviousTender = ({ tableData }) => {
       <tbody>
         {tableData?.map((el, index) => (
           <tr key={index}>
-            <th scope="row">{el.tenderName}</th>
-            <td>{el.tenderDesc}</td>
-            <td>{el.tenderStart}</td>
-            <td>{el.tenderEnd}</td>
-            <td>{el.tenderBuffer}</td>
+            <th scope="row">{el?.tenderName}</th>
+            <td>{el?.tenderDesc}</td>
+            <td>{el?.tenderStart}</td>
+            <td>{el?.tenderEnd}</td>
+            <td>{el?.tenderBuffer}</td>
           </tr>
         ))}
       </tbody>

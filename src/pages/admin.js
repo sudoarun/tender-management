@@ -1,10 +1,26 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import CreateTender from "../components/admin/CreateTender";
 import PreviousTender from "../components/admin/PreviousTender";
-import { arrayData } from "../utils";
 import { Link } from "react-router-dom";
+import { db } from "../firebase/config";
+import { collection, getDocs } from "firebase/firestore";
+import { MyContext } from "../context/myContext";
 
 const Admin = () => {
+  const [previousData, setPreviousData] = useState([]);
+  const { globalState, setGlobalState } = useContext(MyContext);
+  const loadData = async () => {
+    const data = await getDocs(collection(db, "admin"));
+    const newData = data.docs.map((res) => ({
+      ...res.data(),
+      id: res.id,
+    }));
+    setPreviousData(newData);
+    setGlobalState(newData);
+  };
+  useEffect(() => {
+    if (previousData.length == 0) loadData();
+  }, []);
   return (
     <div className="mb-5">
       <div className="bg-black d-flex justify-content-between py-2">
@@ -32,7 +48,16 @@ const Admin = () => {
         <div className="container">
           <h4 className="text-center">Previous Tenders</h4>
           <div className="mt-4">
-            <PreviousTender tableData={arrayData} />
+            {previousData.length > 0 ? (
+              <PreviousTender tableData={previousData} />
+            ) : (
+              <div
+                style={{ height: 200 }}
+                className="d-flex justify-content-center align-items-center"
+              >
+                <div class="loader"></div>
+              </div>
+            )}
           </div>
         </div>
       </section>
