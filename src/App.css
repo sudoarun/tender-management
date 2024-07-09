@@ -9,3 +9,8 @@
   -webkit-backdrop-filter: blur(7px);
   border: 1px solid rgba(208, 32, 255, 0.27);
 }
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}

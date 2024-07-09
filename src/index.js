@@ -5,7 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as mdb from "mdb-ui-kit";
 import { BrowserRouter } from "react-router-dom";
-Window = mdb;
+window.mdb = mdb;
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
-
+import { setDoc, doc } from "firebase/firestore";
+import { db } from "../../firebase/config";
+import { message } from "antd";
 const CreateTender = () => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
     tenderName: "",
     tenderDesc: "",
@@ -8,13 +11,40 @@ const CreateTender = () => {
     tenderEnd: "",
     tenderBuffer: "",
   });
+  const Message = (data) => {
+    const { type, msg } = data;
+    messageApi.open({
+      type: type,
+      content: msg,
+    });
+  };
   const handleForm = (e) => {
     const { name, value } = e.target;
     setState({ ...state, [name]: value });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(state);
+    const startDate = new Date(state.tenderStart);
+    const endDate = new Date(state.tenderEnd);
+    const id = state.tenderName.replace(/[\s,]+/g, "-");
+    state.tenderStart = startDate;
+    state.tenderEnd = endDate;
+    try {
+      await setDoc(doc(db, "admin", `${id}`), state).then(() => {
+        let notice = {
+          type: "success",
+          msg: "Tender Added Successfully",
+        };
+        Message(notice);
+      });
+    } catch (e) {
+      let notice = {
+        type: "error",
+        msg: "Something went wrong",
+      };
+      Message(notice);
+      console.error("Error adding document: ", e);
+    }
     setState({
       tenderName: "",
       tenderDesc: "",
@@ -24,62 +54,65 @@ const CreateTender = () => {
     });
   };
   return (
-    <form className="" onSubmit={handleSubmit}>
-      <div className="row">
-        <div className="col-12 col-sm-6">
-          <input
-            placeholder="Tender Name"
-            className="form-control mb-2 rounded-0"
-            name="tenderName"
-            type="text"
-            value={state.tenderName}
-            onChange={handleForm}
-          />
-          <input
-            placeholder="Start Time"
-            className="form-control mb-2 rounded-0"
-            name="tenderStart"
-            type="datetime-local"
-            value={state.tenderStart}
-            onChange={handleForm}
-          />
-        </div>
-        <div className="col-12 col-sm-6">
-          <textarea
-            placeholder="Tender Description"
-            className="form-control mb-2 rounded-0"
-            style={{ height: "90%" }}
-            name="tenderDesc"
-            value={state.tenderDesc}
-            onChange={handleForm}
-          />
-        </div>
-        <div className="col-12 col-sm-6">
-          <input
-            placeholder="End Time"
-            className="form-control mb-2 rounded-0"
-            name="tenderEnd"
-            type="datetime-local"
-            value={state.tenderEnd}
-            onChange={handleForm}
-          />
-        </div>
+    <>
+      {contextHolder}
+      <form className="" onSubmit={handleSubmit}>
+        <div className="row">
+          <div className="col-12 col-sm-6">
+            <input
+              placeholder="Tender Name"
+              className="form-control mb-2 rounded-0"
+              name="tenderName"
+              type="text"
+              value={state.tenderName}
+              onChange={handleForm}
+            />
+            <input
+              placeholder="Start Time"
+              className="form-control mb-2 rounded-0"
+              name="tenderStart"
+              type="datetime-local"
+              value={state.tenderStart}
+              onChange={handleForm}
+            />
+          </div>
+          <div className="col-12 col-sm-6">
+            <textarea
+              placeholder="Tender Description"
+              className="form-control mb-2 rounded-0"
+              style={{ height: "90%" }}
+              name="tenderDesc"
+              value={state.tenderDesc}
+              onChange={handleForm}
+            />
+          </div>
+          <div className="col-12 col-sm-6">
+            <input
+              placeholder="End Time"
+              className="form-control mb-2 rounded-0"
+              name="tenderEnd"
+              type="datetime-local"
+              value={state.tenderEnd}
+              onChange={handleForm}
+            />
+          </div>
 
-        <div className="col-12 col-sm-6">
-          <input
-            placeholder="Buffer Time"
-            className="form-control mb-2 rounded-0"
-            name="tenderBuffer"
-            type="time"
-            value={state.tenderBuffer}
-            onChange={handleForm}
-          />
+          <div className="col-12 col-sm-6">
+            <input
+              placeholder="Buffer Time in minutes"
+              className="form-control mb-2 rounded-0"
+              name="tenderBuffer"
+              type="number"
+              value={state.tenderBuffer}
+              onChange={handleForm}
+            />
+          </div>
         </div>
-      </div>
-      <div>
-        <button type="submit">Save Tender</button>
-      </div>
-    </form>
+        <div>
+          <button type="submit">Save Tender</button>
+        </div>
+      </form>
+    </>
   );
 };
 
