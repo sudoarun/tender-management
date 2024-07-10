@@ -2,7 +2,7 @@ import React from "react";
 
 const AvailableTenders = ({ tableData, setBuyModal, setTenderData }) => {
   return (
-    <div className="table-responsive-sm">
+    <div className="table-responsive-sm table-responsive-md">
       <table className="table table-striped">
         <thead>
           <tr>
