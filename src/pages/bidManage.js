@@ -25,7 +25,7 @@ const BidManage = () => {
       </h4>
       <section className="mt-4">
         {allBid.length > 0 ? (
-          <div className="container">
+          <div className="container table-responsive-sm">
             <table className="table table-striped">
               <thead>
                 <tr>

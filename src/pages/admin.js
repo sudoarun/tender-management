@@ -49,7 +49,7 @@ const Admin = () => {
           </div>
         </div>
       </section>
-      <section>
+      <section className="mt-3">
         <div className="container">
           <h4 className="text-center">
             Previous{" "}
