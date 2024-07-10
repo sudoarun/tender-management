@@ -64,6 +64,7 @@ const CreateTender = ({ setPreviousData }) => {
               className="form-control mb-2 rounded-0"
               name="tenderName"
               type="text"
+              required
               value={state.tenderName}
               onChange={handleForm}
             />
@@ -72,6 +73,7 @@ const CreateTender = ({ setPreviousData }) => {
               className="form-control mb-2 rounded-0"
               name="tenderStart"
               type="datetime-local"
+              required
               value={state.tenderStart}
               onChange={handleForm}
             />
@@ -82,6 +84,7 @@ const CreateTender = ({ setPreviousData }) => {
               className="form-control mb-2 rounded-0"
               style={{ height: "90%" }}
               name="tenderDesc"
+              required
               value={state.tenderDesc}
               onChange={handleForm}
             />
@@ -91,6 +94,7 @@ const CreateTender = ({ setPreviousData }) => {
               placeholder="End Time"
               className="form-control mb-2 rounded-0"
               name="tenderEnd"
+              required
               type="datetime-local"
               value={state.tenderEnd}
               onChange={handleForm}

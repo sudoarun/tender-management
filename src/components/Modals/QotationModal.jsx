@@ -108,6 +108,7 @@ const QotationModal = ({ isModalOpen, setIsModalOpen, tenderData }) => {
             value={state.companyName}
             onChange={handleValues}
             name="companyName"
+            required
           />
           <input
             className="form-control mb-2"
@@ -116,6 +117,7 @@ const QotationModal = ({ isModalOpen, setIsModalOpen, tenderData }) => {
             value={state.bidCost}
             onChange={handleValues}
             name="bidCost"
+            required
           />
           <input
             className="form-control mb-2"
@@ -125,7 +127,9 @@ const QotationModal = ({ isModalOpen, setIsModalOpen, tenderData }) => {
             onChange={handleValues}
             name="bidTime"
           />
-          <button className="btn btn-primary">Submit</button>
+          <button className="btn btn-primary" type="submit">
+            Submit
+          </button>
         </form>
       </Modal>
     </>
