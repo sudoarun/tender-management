@@ -1,34 +1,101 @@
-import React, { useEffect, useState } from "react";
-import { Modal } from "antd";
+import React, { useState } from "react";
+import { message, Modal } from "antd";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
+import { db } from "../../firebase/config";
 const QotationModal = ({ isModalOpen, setIsModalOpen, tenderData }) => {
+  const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
     companyName: "",
     bidCost: "",
-    bidTime: "",
+    bidTime: new Date(),
   });
+  const Message = (data) => {
+    const { type, msg } = data;
+    messageApi.open({
+      type: type,
+      content: msg,
+    });
+  };
   const handleValues = (e) => {
     const { name, value } = e.target;
     setState((prevState) => ({ ...prevState, [name]: value }));
   };
-  const onFormSubmit = (e) => {
+  function addMinutesToISODate(isoDate, minutesToAdd) {
+    const date = new Date(isoDate);
+    date.setMinutes(date.getMinutes() + minutesToAdd);
+    const formattedDate = date.toISOString().substring(0, 16);
+    return formattedDate;
+  }
+
+  function isDateWithinFiveMinutes(date) {
+    const currentDate = new Date();
+    const targetDate = new Date(date);
+    const currentTime = currentDate.getTime();
+    const targetTime = targetDate.getTime();
+    const differenceInMillis = Math.abs(currentTime - targetTime);
+    return differenceInMillis <= 5 * 60 * 1000;
+  }
+  const onFormSubmit = async (e) => {
     e.preventDefault();
-    console.log(state);
-  };
-  useEffect(() => {
-    if (isModalOpen) {
-      setState((prevState) => ({
-        ...prevState,
-        companyName: tenderData.tenderName,
-      }));
+    const id = state.companyName.replace(/[\s,]+/g, "-");
+    let checkWithInTime = isDateWithinFiveMinutes(tenderData.tenderEnd);
+    try {
+      await setDoc(doc(db, "user", `${id}`), {
+        ...state,
+        tenderName: tenderData.tenderName,
+        tenderID: Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000,
+        bidTime: new Date().toISOString(),
+        Flag: checkWithInTime,
+      }).then(async () => {
+        if (!checkWithInTime) {
+          let notice = {
+            type: "success",
+            msg: "Ouotation Submit Successfully",
+          };
+          Message(notice);
+          setState({
+            companyName: "",
+            bidCost: "",
+            bidTime: new Date().toDateString(),
+          });
+          setIsModalOpen(false);
+          return;
+        }
+        const isoDate = tenderData.tenderEnd;
+        const updatedISODate = addMinutesToISODate(isoDate, 12);
+        console.log(updatedISODate);
+        await updateDoc(doc(db, "admin", tenderData.id), {
+          tenderEnd: updatedISODate,
+        });
+        let notice = {
+          type: "success",
+          msg: "Ouotation Submit Successfully",
+        };
+        Message(notice);
+        setState({
+          companyName: "",
+          bidCost: "",
+          bidTime: new Date().toDateString(),
+        });
+        setIsModalOpen(false);
+      });
+    } catch (e) {
+      let notice = {
+        type: "error",
+        msg: "Something went wrong",
+      };
+      Message(notice);
+      console.error("Error adding document: ", e);
     }
-  }, [isModalOpen, tenderData]);
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
   };
   return (
     <>
+      {contextHolder}
       <Modal
-        title="Basic Modal"
+        title="Quotation Modal"
         open={isModalOpen}
         onCancel={handleCancel}
         footer={null}
@@ -44,7 +111,7 @@ const QotationModal = ({ isModalOpen, setIsModalOpen, tenderData }) => {
           />
           <input
             className="form-control mb-2"
-            type="text"
+            type="number"
             placeholder="Bid Costs"
             value={state.bidCost}
             onChange={handleValues}
@@ -52,13 +119,13 @@ const QotationModal = ({ isModalOpen, setIsModalOpen, tenderData }) => {
           />
           <input
             className="form-control mb-2"
-            type="datetime-local"
+            readOnly
             placeholder="Bid Time"
             value={state.bidTime}
             onChange={handleValues}
             name="bidTime"
           />
-          <button>Submit</button>
+          <button className="btn btn-primary">Submit</button>
         </form>
       </Modal>
     </>

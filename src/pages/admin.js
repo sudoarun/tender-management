@@ -19,8 +19,8 @@ const Admin = () => {
     setGlobalState(newData);
   };
   useEffect(() => {
-    if (previousData.length == 0) loadData();
-  }, []);
+    if (previousData.length === 0) loadData();
+  }, [globalState]);
   return (
     <div className="mb-5">
       <div className="bg-black d-flex justify-content-between py-2">
@@ -36,17 +36,27 @@ const Admin = () => {
 
       <section>
         <div className="mt-5">
-          <h4 className="text-center">Create Tender</h4>
+          <h4 className="text-center">
+            Create{" "}
+            <span className="border-bottom border-primary border-2">
+              Tender
+            </span>
+          </h4>
           <div className="container">
             <div className="mt-4">
-              <CreateTender />
+              <CreateTender setPreviousData={setPreviousData} />
             </div>
           </div>
         </div>
       </section>
       <section>
         <div className="container">
-          <h4 className="text-center">Previous Tenders</h4>
+          <h4 className="text-center">
+            Previous{" "}
+            <span className="border-bottom border-primary border-2">
+              Tenders
+            </span>
+          </h4>
           <div className="mt-4">
             {previousData.length > 0 ? (
               <PreviousTender tableData={previousData} />
@@ -55,7 +65,7 @@ const Admin = () => {
                 style={{ height: 200 }}
                 className="d-flex justify-content-center align-items-center"
               >
-                <div class="loader"></div>
+                <div className="loader"></div>
               </div>
             )}
           </div>

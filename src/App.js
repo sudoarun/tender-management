@@ -9,7 +9,7 @@ import { MyContext } from "./context/myContext";
 import { useState } from "react";
 
 function App() {
-  const [globalState, setGlobalState] = useState("");
+  const [globalState, setGlobalState] = useState([]);
   return (
     <div>
       <MyContext.Provider value={{ globalState, setGlobalState }}>

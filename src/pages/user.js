@@ -41,7 +41,6 @@ const User = () => {
       }
     });
     setGlobalState(mergeArray);
-    console.log(closestObject);
     if (closestObject == null) {
       return;
     }
@@ -61,14 +60,26 @@ const User = () => {
       <div className="bg-black text-center py-2">
         <span className="text-white">User Page</span>
       </div>
-      <h4 className="mt-4 text-center">Available Tenders</h4>
+      <h4 className="mt-4 text-center">
+        Available{" "}
+        <span className="border-bottom border-primary border-2">Tenders</span>
+      </h4>
       <section>
         <div className="container">
-          <AvailableTenders
-            tableData={globalState}
-            setBuyModal={setIsModalOpen}
-            setTenderData={setTenderData}
-          />
+          {globalState.length === 0 ? (
+            <div
+              style={{ height: 200 }}
+              className="d-flex justify-content-center align-items-center"
+            >
+              <div className="loader"></div>
+            </div>
+          ) : (
+            <AvailableTenders
+              tableData={globalState}
+              setBuyModal={setIsModalOpen}
+              setTenderData={setTenderData}
+            />
+          )}
         </div>
         <QotationModal
           isModalOpen={isModalOpen}

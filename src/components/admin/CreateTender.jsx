@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import { message } from "antd";
-const CreateTender = () => {
+import { MyContext } from "../../context/myContext";
+const CreateTender = ({ setPreviousData }) => {
   const [messageApi, contextHolder] = message.useMessage();
   const [state, setState] = useState({
     tenderName: "",
@@ -11,6 +12,7 @@ const CreateTender = () => {
     tenderEnd: "",
     tenderBuffer: "",
   });
+  const { setGlobalState } = useContext(MyContext);
   const Message = (data) => {
     const { type, msg } = data;
     messageApi.open({
@@ -24,13 +26,11 @@ const CreateTender = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const startDate = new Date(state.tenderStart);
-    // const endDate = new Date(state.tenderEnd);
     const id = state.tenderName.replace(/[\s,]+/g, "-");
-    // state.tenderStart = startDate;
-    // state.tenderEnd = endDate;
     try {
       await setDoc(doc(db, "admin", `${id}`), state).then(() => {
+        setGlobalState((prev) => [...prev, state]);
+        setPreviousData((prev) => [...prev, state]);
         let notice = {
           type: "success",
           msg: "Tender Added Successfully",
@@ -109,7 +109,9 @@ const CreateTender = () => {
           </div>
         </div>
         <div>
-          <button type="submit">Save Tender</button>
+          <button type="submit" className="btn btn-primary">
+            Save Tender
+          </button>
         </div>
       </form>
     </>
